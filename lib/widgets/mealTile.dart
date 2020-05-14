@@ -11,7 +11,7 @@ class MealTile extends StatelessWidget {
   final String id;
   final Color color;
   MealTile({
-    this.color,
+    this.color = Colors.pinkAccent,
     this.id,
     this.imageUrl,
     this.title,

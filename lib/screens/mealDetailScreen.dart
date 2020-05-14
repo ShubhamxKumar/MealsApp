@@ -2,7 +2,7 @@ import 'package:Meals/models/meal.dart';
 import 'package:flutter/material.dart';
 import 'package:Meals/dummyDataBase.dart';
 
-class MealDetailScreen extends StatelessWidget {
+class MealDetailScreen extends StatefulWidget {
   final String mealID;
   final Color color;
   final String complexity;
@@ -17,12 +17,26 @@ class MealDetailScreen extends StatelessWidget {
   });
 
   @override
+  _MealDetailScreenState createState() => _MealDetailScreenState();
+}
+
+class _MealDetailScreenState extends State<MealDetailScreen> {
+  bool _toggle = false;
+  @override
   Widget build(BuildContext context) {
     final List<MealModel> selectedMeal = DUMMY_MealModelS.where((element) {
       // Now we have the meal that the user selected.
-      return element.id.contains(
-          mealID); // here we are filtering against mealID so we will get only one item in list.
+      return element.id.contains(widget
+          .mealID); // here we are filtering against mealID so we will get only one item in list.
     }).toList();
+    if ((favoriteMeals.indexWhere((meal) {
+          return meal.id == selectedMeal[0].id;
+        }) !=
+        -1)) {
+      setState(() {
+        _toggle = true;
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -32,13 +46,13 @@ class MealDetailScreen extends StatelessWidget {
           },
           child: Icon(
             Icons.arrow_back_ios,
-            color: color,
+            color: widget.color,
           ),
         ),
         title: Text(
           selectedMeal[0].title,
           style: TextStyle(
-            color: color,
+            color: widget.color,
             fontFamily: 'Raleway',
             fontWeight: FontWeight.bold,
           ),
@@ -49,7 +63,7 @@ class MealDetailScreen extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       body: ListView(
-        padding: EdgeInsets.only(bottom:15), 
+        padding: EdgeInsets.only(bottom: 15),
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width,
@@ -64,21 +78,21 @@ class MealDetailScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Text(
-                  'Duration : ' + duration.toString() + ' mins',
+                  'Duration : ' + widget.duration.toString() + ' mins',
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'Montserrat',
                   ),
                 ),
                 Text(
-                  'Affordabilty : $affordability',
+                  'Affordabilty : ${widget.affordability}',
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'Montserrat',
                   ),
                 ),
                 Text(
-                  'Complexity : $complexity',
+                  'Complexity : ${widget.complexity}',
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'Montserrat',
@@ -104,7 +118,7 @@ class MealDetailScreen extends StatelessWidget {
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width, 
+            width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.symmetric(vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,7 +141,7 @@ class MealDetailScreen extends StatelessWidget {
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width, 
+            width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.symmetric(vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,6 +151,21 @@ class MealDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _toggle = !_toggle;
+          setState(() {
+            if (_toggle) {
+              favoriteMeals.add(selectedMeal[0]);
+            }
+            if (!_toggle) {
+              favoriteMeals.remove(selectedMeal[0]);
+            }
+          });
+          print(_toggle);
+        },
+        child: Icon(_toggle ? Icons.star : Icons.star_border),
       ),
     );
   }
@@ -149,7 +178,7 @@ class IngredientContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center, 
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
             ' ' + line,
@@ -169,12 +198,12 @@ class StepsContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 9, vertical: 7), 
+      margin: EdgeInsets.symmetric(horizontal: 9, vertical: 7),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start, 
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width - 18, 
+            width: MediaQuery.of(context).size.width - 18,
             child: Text(
               ' ' + line,
               softWrap: true,

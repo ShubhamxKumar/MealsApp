@@ -406,3 +406,5 @@ const DUMMY_MealModelS = const [
   ),
 ];
 
+List<MealModel> favoriteMeals = [];
+
